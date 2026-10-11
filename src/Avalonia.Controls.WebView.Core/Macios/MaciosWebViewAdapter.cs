@@ -74,6 +74,19 @@ internal class MaciosWebViewAdapter : IWebViewAdapterWithFocus, IWebViewAdapterW
         _config.Preferences.MediaDevicesEnabled = true; // undocumented, but necessary for getUserMedia to work
         _config.Preferences.DeveloperExtrasEnabled = options.EnableDevTools;
 
+        try
+        {
+            options.ConfigureWKWebViewConfiguration?.Invoke(_config.Handle);
+        }
+        catch
+        {
+            _config.RemoveScriptMessageHandler(_scriptHandlerMessageNameNative);
+            _scriptHandler.Dispose();
+            _scriptHandlerMessageNameNative.Dispose();
+            _config.Dispose();
+            throw;
+        }
+
         _navDelegate = new WKNavigationDelegate();
         _navDelegate.DidFinishNavigation += OnDelegateOnDidFinishNavigation;
         _navDelegate.DecidePolicyNavigation += OnDelegateOnDecidePolicyNavigation;

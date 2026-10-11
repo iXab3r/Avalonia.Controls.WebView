@@ -40,4 +40,13 @@ public sealed class AppleWKWebViewEnvironmentRequestedEventArgs : WebViewEnviron
     /// Gets or sets the name of the script message handler.
     /// </summary>
     public string? ScriptHandlerMessageName { get; set; }  
+
+    /// <summary>
+    /// Configures the native WKWebViewConfiguration immediately before WKWebView creation.
+    /// The pointer is borrowed, valid only during this synchronous callback, and must not
+    /// be retained or released. The callback runs on the native web view creation thread.
+    /// Exceptions abort creation and propagate to the caller.
+    /// </summary>
+    public Action<IntPtr>? ConfigureWKWebViewConfiguration { get; set; }
+
 }

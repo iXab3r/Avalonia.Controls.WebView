@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net10.0;net10.0-android;net10.0-browser</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <Description>Avalonia WebView component enables embedding web content in Avalonia applications for use cases like documentation, dashboards, and interactive content.</Description>
     <DefineConstants>$(DefineConstants);AVALONIA</DefineConstants>
     <RootNamespace>Avalonia.Controls</RootNamespace>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <CopyLocalLockFileAssemblies Condition="'$(ILMergeBuild)' == 'true'">true</CopyLocalLockFileAssemblies>
     <AndroidGenerateResourceDesigner>false</AndroidGenerateResourceDesigner>
     <AvnLicensingEmitBuildTime>true</AvnLicensingEmitBuildTime>
@@ -25,6 +26,10 @@
 
   <ItemGroup>
     <Content Include="build\**\*" PackagePath="build;buildTransitive" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../LICENSE" Link="licenses/Avalonia.Controls.WebView.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <Import Project="../Avalonia.Controls.WebView.Core/IncludeBuildItems.props" />
