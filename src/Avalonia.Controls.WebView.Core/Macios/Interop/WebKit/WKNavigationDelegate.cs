@@ -52,6 +52,7 @@ internal unsafe class WKNavigationDelegate : NSManagedObjectBase
 
     private static readonly IntPtr s_actionRequest = Libobjc.sel_getUid("request");
     private static readonly IntPtr s_navigationType = Libobjc.sel_getUid("navigationType");
+    private static readonly IntPtr s_isMainFrame = Libobjc.sel_getUid("isMainFrame");
     private static readonly IntPtr s_targetFrame = Libobjc.sel_getUid("targetFrame");
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
@@ -61,10 +62,12 @@ internal unsafe class WKNavigationDelegate : NSManagedObjectBase
 
         using var request = NSURLRequest.FromHandle(Libobjc.intptr_objc_msgSend(navigationAction, s_actionRequest));
 
+        var frame = Libobjc.intptr_objc_msgSend(navigationAction, s_targetFrame);
         var args = new DecidePolicyNavigationEventArgs
         {
             Request = request,
-            TargetFrame = Libobjc.intptr_objc_msgSend(navigationAction, s_targetFrame)
+            TargetFrame = frame,
+            IsMainFrame = frame != IntPtr.Zero && Libobjc.byte_objc_msgSend(frame, s_isMainFrame) != 0
         };
         managed?.DecidePolicyNavigation?.Invoke(managed, args);
 
@@ -76,5 +79,6 @@ internal unsafe class WKNavigationDelegate : NSManagedObjectBase
     {
         public required NSURLRequest Request { get; init; }
         public IntPtr TargetFrame { get; init; }
+        public bool IsMainFrame { get; init; }
     }
 }

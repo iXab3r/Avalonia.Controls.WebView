@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
 
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <IsPackable>true</IsPackable><PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>Avalonia.Controls</RootNamespace>
     <WarningsAsErrors>$(WarningsAsErrors);CA1420;CA1421;</WarningsAsErrors>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
@@ -32,4 +33,5 @@
 
   <Import Project="../Avalonia.Controls.WebView.Core/IncludeBuildItems.props" />
   <Import Project="$(RepositoryTargetsRoot)/SignEnable.targets" />
+  <ItemGroup><None Include="build/Avalonia.Controls.WebView.Core.props" Pack="true" PackagePath="build/" /></ItemGroup>
 </Project>

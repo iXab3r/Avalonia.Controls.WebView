@@ -8,6 +8,7 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   
+    <Version>12.0.0-vizor.2</Version>
     <AvaloniaVersion>12.0.0</AvaloniaVersion>
     <AvaloniaSampleVersion>12.1.1</AvaloniaSampleVersion>
 

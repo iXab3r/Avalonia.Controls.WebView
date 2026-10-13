@@ -109,8 +109,8 @@ internal class MaciosWebViewAdapter : IWebViewAdapterWithFocus, IWebViewAdapterW
                 key.Handle);
         }
 
-        Handle = _webView.Retain();
-        _webView.UnsafeDisown();
+        // NativeControlHost borrows the view; this adapter retains ownership until Dispose.
+        Handle = _webView.Handle;
     }
 
     public IntPtr Handle { get; }
@@ -229,6 +229,7 @@ internal class MaciosWebViewAdapter : IWebViewAdapterWithFocus, IWebViewAdapterW
         _webView.LoadRequest(null);
 
         _scriptHandler.Dispose();
+        _scriptHandlerMessageNameNative.Dispose();
         _navDelegate.Dispose();
         _config.Dispose();
         WebViewDispatcher.InvokeAsync(() =>
@@ -265,7 +266,7 @@ internal class MaciosWebViewAdapter : IWebViewAdapterWithFocus, IWebViewAdapterW
             var state = new WKWebView.JSCallState(_webView.Handle, tcs);
             await WKWebView.PtrResultToString(args.Body, state);
             var str = await tcs.Task;
-            WebMessageReceived?.Invoke(this, new WebMessageReceivedEventArgs { Body = str });
+            WebMessageReceived?.Invoke(this, new WebMessageReceivedEventArgs { Body = str, IsMainFrame = args.IsMainFrame, Source = Uri.TryCreate(args.Source, UriKind.Absolute, out var source) ? source : null });
         }
     }
 
@@ -300,7 +301,7 @@ internal class MaciosWebViewAdapter : IWebViewAdapterWithFocus, IWebViewAdapterW
         }
         else
         {
-            var startedArgs = new WebViewNavigationStartingEventArgs { Request = url };
+            var startedArgs = new WebViewNavigationStartingEventArgs { Request = url, IsMainFrame = args.IsMainFrame };
             NavigationStarted?.Invoke(this, startedArgs);
             args.Cancel = startedArgs.Cancel;
         }

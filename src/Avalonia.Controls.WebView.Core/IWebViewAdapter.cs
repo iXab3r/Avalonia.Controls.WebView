@@ -52,6 +52,8 @@ public abstract class WebViewEnvironmentRequestedEventArgs : EventArgs
 public sealed class WebMessageReceivedEventArgs : EventArgs
 {
     public string? Body { get; init; }
+    public Uri? Source { get; init; }
+    public bool IsMainFrame { get; init; }
 }
 
 public sealed class WebResourceRequestedEventArgs : EventArgs
@@ -98,6 +100,7 @@ public sealed class WebViewWebResourceRequest
 public class WebViewNavigationEventArgs : EventArgs
 {
     public Uri? Request { get; init; }
+    public bool IsMainFrame { get; init; } = true;
 }
 
 public sealed class WebViewNavigationCompletedEventArgs : WebViewNavigationEventArgs

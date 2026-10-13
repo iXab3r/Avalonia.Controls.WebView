@@ -10,6 +10,11 @@ internal unsafe class WKScriptMessageHandler : NSManagedObjectBase
     private static readonly IntPtr s_class;
 
     private static readonly IntPtr s_messageName = Libobjc.sel_getUid("name");
+    private static readonly IntPtr s_frameInfo = Libobjc.sel_getUid("frameInfo");
+    private static readonly IntPtr s_request = Libobjc.sel_getUid("request");
+    private static readonly IntPtr s_url = Libobjc.sel_getUid("URL");
+    private static readonly IntPtr s_absoluteString = Libobjc.sel_getUid("absoluteString");
+    private static readonly IntPtr s_isMainFrame = Libobjc.sel_getUid("isMainFrame");
     private static readonly IntPtr s_messageBody = Libobjc.sel_getUid("body");
 
     private static readonly delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, IntPtr, void>
@@ -45,9 +50,14 @@ internal unsafe class WKScriptMessageHandler : NSManagedObjectBase
     {
         var managed = ReadManagedSelf<WKScriptMessageHandler>(self);
         var messageName = NSString.GetString(Libobjc.intptr_objc_msgSend(messagePtr, s_messageName));
+        var frame = Libobjc.intptr_objc_msgSend(messagePtr, s_frameInfo);
+        var request = Libobjc.intptr_objc_msgSend(frame, s_request);
+        var url = Libobjc.intptr_objc_msgSend(request, s_url);
         managed?.DidReceiveScriptMessage?.Invoke(managed, new ScriptMessageEventArgs
         {
             Name = messageName,
+            IsMainFrame = Libobjc.byte_objc_msgSend(frame, s_isMainFrame) != 0,
+            Source = NSString.GetString(Libobjc.intptr_objc_msgSend(url, s_absoluteString)),
             Body = Libobjc.intptr_objc_msgSend(messagePtr, s_messageBody)
         });
     }
@@ -56,5 +66,7 @@ internal unsafe class WKScriptMessageHandler : NSManagedObjectBase
     {
         public string? Name { get; init; }
         public IntPtr Body { get; init; }
+        public string? Source { get; init; }
+        public bool IsMainFrame { get; init; }
     }
 }

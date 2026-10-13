@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Avalonia.Controls.WebView.Core\Avalonia.Controls.WebView.Core.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Avalonia.Controls.WebView.Core\Avalonia.Controls.WebView.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="../../LICENSE" Link="licenses/Avalonia.Controls.WebView.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="../../LICENSE" Link="licenses/Avalonia.Controls.WebView.txt" Pack="true" PackagePath="licenses/" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <Import Project="../Avalonia.Controls.WebView.Core/IncludeBuildItems.props" />

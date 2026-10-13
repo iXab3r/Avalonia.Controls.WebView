@@ -43,8 +43,10 @@ internal abstract class NSObject : IDisposable, IEquatable<NSObject>
         _owns = owns;
     }
 
-    protected NSObject(IntPtr classHandle) : this(Libobjc.intptr_objc_msgSend(classHandle, s_allocSel), true)
+    protected NSObject(IntPtr classHandle) : this(Libobjc.intptr_objc_msgSend(classHandle, s_allocSel), false)
     {
+        // alloc already supplies this wrapper's owned reference; retain is for borrowed handles.
+        _owns = true;
         _class = classHandle;
     }
 
@@ -177,11 +179,6 @@ internal abstract class NSObject : IDisposable, IEquatable<NSObject>
         return new IntPtr((long)baseHandle + (long)Libobjc.ivar_getOffset(ivar));
     }
 
-    internal void UnsafeDisown()
-    {
-        _owns = false;
-    }
-
     private unsafe void ReleaseUnmanagedResources(bool disposing)
     {
         if (!_owns && _superRef == default)
@@ -191,14 +188,15 @@ internal abstract class NSObject : IDisposable, IEquatable<NSObject>
         Debug.WriteLine($"Disposing (finalize: {!disposing}, owns: {_owns}): {GetType()}");
 #endif
 
-        // if (_superRef != default)
-        // {
-        //     Marshal.Release(new IntPtr(_superRef));
-        // }
-
         if (_owns)
         {
+            _owns = false;
             Libobjc.void_objc_msgSend(Handle, s_releaseSel);
+        }
+        if (_superRef != default)
+        {
+            Marshal.FreeHGlobal(new IntPtr(_superRef));
+            _superRef = default;
         }
     }
 
