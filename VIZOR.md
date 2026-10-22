@@ -1,6 +1,8 @@
 # Vizor NativeAOT source build
 
-Branch `codex/vizor-nativeaot` starts at official upstream b45e042d21d96371bb6d07822a55c85ee5f74d2f (WebView 12.1.0). The parent repository pins a commit, never a moving branch. This fork preserves upstream history and the MIT license.
+The initial branch `codex/vizor-nativeaot` starts at official upstream b45e042d21d96371bb6d07822a55c85ee5f74d2f (WebView 12.1.0). The parent repository pins a commit, never a moving branch. This fork preserves upstream history and the MIT license.
+
+The current owner integration branch is `codex/46-native-lifecycle`, which descends from `codex/vizor-nativeaot` and includes the desktop code-completion and native lifetime corrections below. Upstream `main` is a separate line; select the intended consumer revision before integrating changes.
 
 Changes for the Vizor macOS ARM64 prototype:
 - A synchronous public `ConfigureWKWebViewConfiguration` callback over the borrowed native configuration handle, invoked before WKWebView construction. The callback must neither retain nor release the handle. A throwing callback removes/releases configuration and script-handler resources and rethrows.

@@ -1,5 +1,7 @@
 ﻿# Avalonia Controls WebView
 
+This fork also carries Vizor desktop source and local-package changes. See [VIZOR.md](VIZOR.md) for the fork integration, split Core/WebView packages, and acceptance limits; the build description below documents the upstream Nuke/ILRepack pipeline.
+
 ## Components
 
 ### NativeWebView
